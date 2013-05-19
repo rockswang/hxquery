@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+    <app title="HxQuery Sample 01" file="hxquery-sample01"
+         main="Main"
+         package="com.roxstudio.haxe" version="1.0.0"
+         company="roxstudio" />
+
+    <window width="640" height="480" fps="30"
+            orientation="lanscape" background="0xffffff" resizable="false"
+            hardware="true" />
+
+    <classpath name="src" />
+
+    <haxedef name="fdb" if="target_flash" />
+
+    <haxelib name="nme" />
+    <haxelib name="rox-hxquery" />
+
+    <ndll name="std" />
+    <ndll name="nme" haxelib="nme" />
+
+</project>
