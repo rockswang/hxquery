@@ -27,38 +27,33 @@ class Main extends Sprite {
         var input = stage;
         var v: TreeVisitor<DisplayObject> = new DisplayListVisitor();
         var query = new HxQuery(v);
-//        var found: Array<DisplayObject> = query.find(input, "MySprite > TextField:nth-child(2)");
-        var tf = new TextField();
-        tf.selectable = false;
-        tf.mouseEnabled = false;
-        tf.defaultTextFormat = textFormat(0, 12);
-        tf.multiline = tf.wordWrap = true;
-        tf.width = width;
-        tf.height = height - 20;
-        tf.x = tf.y = 0;
+
+        var tf = text(0, 12, false, true, width, height - 30);
         var buf = new StringBuf();
         tf.text = query.dump(input, buf).toString();
         stage.addChild(tf);
 
-        var inp = new TextField();
-        inp.selectable = true;
-        inp.mouseEnabled = true;
-        inp.type = nme.text.TextFieldType.INPUT;
-        inp.defaultTextFormat = textFormat(0, 12);
-        inp.multiline = inp.wordWrap = false;
-        inp.width = width - 100;
-        inp.height = 20;
-        inp.x = 0;
-        inp.y = height - 20;
+        var inp = text(0, 16, true, false, width - 100, 20);
+        var inpWrap = new Sprite();
+        inpWrap.addChild(inp);
+        inpWrap.graphics.lineStyle(1, 0);
+        inpWrap.graphics.drawRect(0, 0, width - 20, 20);
+        inpWrap.x = 0;
+        inpWrap.y = height - 22;
         var buf = new StringBuf();
         inp.text = "Stage Circle";
-        stage.addChild(inp);
+        stage.addChild(inpWrap);
 
         var btn = new Sprite();
         btn.mouseEnabled = true;
-        btn.graphics.lineStyle(3, 0);
+        btn.graphics.lineStyle(1, 0);
         btn.graphics.beginFill(0x0000FF);
-        btn.graphics.drawRoundRect(0, 0, 80, 20, 6);
+        btn.graphics.drawRect(0, 0, 80, 20);
+        var btnLabel = text(0, 12, false, true, 50, 20);
+        btnLabel.text = "Find";
+        btnLabel.x = (80 - btnLabel.textWidth) / 2;
+        btnLabel.y = (20 - btnLabel.textHeight) / 2;
+        btn.addChild(btnLabel);
         btn.addEventListener(MouseEvent.CLICK, function(_) {
             var nodes: Array<DisplayObject> = query.find(stage, "*.Base");
             for (n in nodes) {
@@ -70,12 +65,24 @@ class Main extends Sprite {
             }
         });
         btn.x = width - 80;
-        btn.y = height - 20;
+        btn.y = height - 22;
         stage.addChild(btn);
 
     }
 
-    public static inline function textFormat(color: Int, size: Float) : TextFormat {
+    private static function text(color: Int, size: Float, input: Bool, multiline: Bool, width: Float, height: Float) : TextField {
+        var tf = new TextField();
+        tf.selectable = tf.mouseEnabled = input;
+        if (input) tf.type = nme.text.TextFieldType.INPUT;
+        tf.defaultTextFormat = textFormat(color, size);
+        tf.multiline = tf.wordWrap = multiline;
+        tf.width = width;
+        tf.height = height;
+        tf.x = tf.y = 0;
+        return tf;
+    }
+
+    private static function textFormat(color: Int, size: Float) : TextFormat {
         var format = new TextFormat();
 #if android
         format.font = new nme.text.Font("/system/fonts/DroidSansFallback.ttf").fontName;
@@ -116,6 +123,7 @@ class Base extends Sprite {
         super();
         this.r = r;
         this.color = color;
+        this.alpha = 0.9;
     }
 
     public function move() {
@@ -144,6 +152,8 @@ class Base extends Sprite {
     private function paint() {}
 }
 
+interface ISmooth {}
+
 class Square extends Base {
     public function new(r: Float, color: Int) {
         super(r, color);
@@ -154,7 +164,7 @@ class Square extends Base {
     }
 }
 
-class Circle extends Base {
+class Circle extends Base, implements ISmooth {
     public function new(r: Float, color: Int) {
         super(r, color);
         this.name = "circle" + Base.globalCnt++;
@@ -179,7 +189,7 @@ class Triangle extends Base {
     }
 }
 
-class Round extends Square {
+class Round extends Square, implements ISmooth {
     public function new(r: Float, color: Int) {
         super(r, color);
         this.name = "round" + Base.globalCnt++;

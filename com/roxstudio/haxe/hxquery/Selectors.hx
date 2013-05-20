@@ -26,7 +26,6 @@ class Selectors {
             skipWs();
             group.push(selector());
         }
-        trace(">>" + group);
     }
 
     private inline function skipWs() {

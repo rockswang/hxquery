@@ -29,7 +29,7 @@ class HxQuery<T> {
         trace(dump(n, buf, 0));
     }
 
-    private function dump(n: T, buf: StringBuf, indent: Int = 0) {
+    public function dump(n: T, buf: StringBuf, indent: Int = 0) {
         for (i in 0...indent) buf.add("  ");
         var nstr: String = "" + n;
         if (nstr.length > 20) nstr = nstr.substr(0, 17) + "...";
@@ -45,7 +45,7 @@ class HxQuery<T> {
     private function selectorFind(n: T, selector: Selector) {
         var found: Array<T> = [ n ];
         for (pair in selector) {
-            var comb = pair.combinator == null ? Descendent : pair.combinator;
+            var comb = pair.combinator;
             var seq = pair.simpleSeq;
             found = pairFind(found, comb, seq);
         }
@@ -54,13 +54,15 @@ class HxQuery<T> {
 
     private function pairFind(input: Array<T>, comb: Combinator, seq: Sequence) {
         var output: Array<T> = [];
-        var recursive = comb == Descendent, immediate = comb == Adjacent;
+        if (comb == null && sequenceMatch(input[0], 0, seq, 0)) output.push(input[0]);
+        var recursive = comb == null || comb == Descendent, immediate = comb == Adjacent;
         for (n in input) {
             var target = n, fromIdx = 0;
             if (comb == Adjacent || comb == Sibling) {
-                if (visitor.parent(n) == null) continue;
                 target = visitor.parent(n);
+                if (target == null) continue;
                 fromIdx = visitor.indexOf(target, n) + 1;
+                if (fromIdx >= visitor.length(target)) continue;
             }
             output = output.concat(sequenceFind(target, fromIdx, immediate, recursive, seq));
         }
@@ -84,7 +86,7 @@ class HxQuery<T> {
         return found;
     }
 
-    private inline function sequenceMatch(n: T, idx: Int, seq: Sequence, fromIdx: Int) {
+    private inline function sequenceMatch(n: T, idx: Int, seq: Sequence, fromIdx: Int) : Bool {
         var match = true;
         for (i in fromIdx...seq.length) if (!simpleMatch(n, idx, seq[i])) { match = false; break; }
         return match;

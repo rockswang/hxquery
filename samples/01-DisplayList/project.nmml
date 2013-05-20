@@ -15,7 +15,7 @@
     <haxedef name="fdb" if="target_flash" />
 
     <haxelib name="nme" />
-    <!--haxelib name="rox-hxquery" /-->
+    <haxelib name="rox-hxquery" />
 
     <ndll name="std" />
     <ndll name="nme" haxelib="nme" />
