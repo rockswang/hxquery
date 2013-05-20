@@ -32,7 +32,7 @@ Supported pseudo-classes:
 * :gt(i), :lt(i), :eq(i)
 * :only-child
 * :empty
-* :not . E.g. "dir input:not([type='submit'])"
+* :not . E.g. "div input:not([type='submit'])"
   
 Xml example:
 
