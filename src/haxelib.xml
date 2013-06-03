@@ -4,5 +4,5 @@
     <tag v="dom"/>
     <tag v="jquery"/>
     <description>JQuery-like CSS Selectors engine for quick visit any tree structure</description>
-    <version name="1.0">Initial version.</version>
+    <version name="1.1">restructured.</version>
 </project>
