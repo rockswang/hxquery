@@ -1,8 +1,0 @@
-<project name="rox-hxquery" url="https://github.com/rockswang/hxquery" license="BSD">
-    <user name="rockswang"/>
-    <tag v="cross"/>
-    <tag v="dom"/>
-    <tag v="jquery"/>
-    <description>JQuery-like CSS Selectors engine for quick visit any tree structure</description>
-    <version name="1.0">Initial version.</version>
-</project>
