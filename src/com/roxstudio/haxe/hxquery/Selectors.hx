@@ -171,7 +171,7 @@ class Selectors {
                             var arg = readUntil(")".code).trim();
                             var ii = arg.indexOf("n");
                             var a = ii < 0 ? 0 : ii == 0 ? 1 : Std.parseInt(arg.substr(0, ii));
-                            var b = ii < 0 ? Std.parseInt(arg) : Std.parseInt(arg.substr(ii + 1));
+                            var b = ii < 0 ? Std.parseInt(arg) : Std.parseInt(arg.substr(ii + 1).trim());
                             result = Nth(func, a, b);
                         default:
                             var arg = cur == "\"".code || cur == "'".code ? str() : readUntil(")".code).trim();

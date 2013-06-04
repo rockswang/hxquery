@@ -40,6 +40,10 @@ class AbstractVisitor<T> implements TreeVisitor<T> {
         return null;
     }
 
+    public function replaceChild(n: T, oldChild: T, newChild: T) : Bool {
+        return addChild(n, newChild, oldChild) ? removeChild(n, oldChild) != null : false;
+    }
+
     public function empty(n: T) : Bool {
         throw "Abstract method";
         return false;

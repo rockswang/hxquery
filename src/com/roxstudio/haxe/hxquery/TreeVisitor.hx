@@ -18,6 +18,8 @@ interface TreeVisitor<T> {
 
     public function removeChild(n: T, child: T) : T;
 
+    public function replaceChild(n: T, oldChild: T, newChild: T) : Bool;
+
     public function empty(n: T) : Bool;
 
     public function equals(n1: T, n2: T) : Bool;

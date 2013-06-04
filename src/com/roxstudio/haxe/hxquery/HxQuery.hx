@@ -140,8 +140,7 @@ class HxQuery<T> {
             if (p == null) continue;
             var c = onReplace(n);
             if (c != null) {
-                visitor.addChild(p, c, n);
-                visitor.removeChild(p, n);
+                visitor.replaceChild(p, n, c);
             }
         }
         return this;

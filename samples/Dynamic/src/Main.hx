@@ -33,6 +33,11 @@ class Main extends Sprite {
         hash2.set(11, 83);
         var input = [ DynamicVisitor.wrapper(json, "root"), DynamicVisitor.wrapper(hash1, "hash"), DynamicVisitor.wrapper(hash2, "inthash") ];
         v = new DynamicVisitor();
+        v.createQuery(input).select("inthash > *").replace(function(n: Wrapper) {
+            var sqr = cast(n.value, Int);
+            sqr *= sqr;
+            return DynamicVisitor.wrapper(sqr);
+        });
 
         var tf = text(0, 12, false, true, width, height - 30);
         tf.text = v.createQuery(input).dump();

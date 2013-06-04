@@ -145,6 +145,33 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
         }
     }
 
+    override public function replaceChild(n: Wrapper, old: Wrapper, newc: Wrapper) : Bool {
+        if (n.isLeaf) return false;
+        return switch (n.type) {
+            case "Array":
+                var arr: Array<Dynamic> = cast n.value;
+                var idx = Lambda.indexOf(arr, old.value);
+                if (idx >= 0) {
+                    arr.remove(old);
+                    arr.insert(idx, newc.value);
+                    true;
+                } else false;
+            case "Hash":
+                var hash: Hash<Dynamic> = cast n.value;
+                hash.set(old.name, newc.value);
+                true;
+            case "IntHash":
+                var hash: IntHash<Dynamic> = cast n.value;
+                var idx = int(old.name);
+                if (idx != null) {
+                    hash.set(idx, newc.value);
+                    true;
+                } else false;
+            default:
+                super.replaceChild(n, old, newc);
+        }
+    }
+
     override public function empty(n: Wrapper) : Bool {
         if (n.isLeaf || n.parent == null) return false;
         var val: Dynamic = switch (n.type) {
@@ -158,8 +185,7 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
     }
 
     override public function equals(n1: Wrapper, n2: Wrapper) : Bool {
-        return n1 == null ? n2 == null : n2 == null ? false
-            : n1.name == n2.name && n1.value == n2.value && equals(n1.parent, n2.parent);
+        return n1 == n2 || n1 != null && n2 != null && n1.name == n2.name && n1.value == n2.value && equals(n1.parent, n2.parent);
     }
 
     override public function typeOf(n: Wrapper) : String {
