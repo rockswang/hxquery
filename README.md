@@ -3,7 +3,7 @@ HxQuery
 
 A JQuery-like CSS Selectors engine written in Haxe, for quick visit any tree data structure.
 
-HxQuery provides an abstract TreeVisitor interface for developers to implement so that the custom tree struction can be operated with HxQuery engine.
+HxQuery provides an abstract TreeVisitor interface for developers to implement so that the custom tree structure can be operated with HxQuery engine.
 Currently the engine has already included: 
 * An Xml visitor
 * A flash/nme display list visitor
@@ -11,7 +11,7 @@ Currently the engine has already included:
 
 CSS Selectors implemention based on http://www.w3.org/TR/selectors/
 
-Supported syntax:
+Supported Selectors syntax:
 * Groups of selectors. E.g. "div,h1,h2"
 * Combinators
   * Descendant combinator. E.g. "div form"
@@ -24,7 +24,7 @@ Supported syntax:
   * Attribute selector. E.g. "[alt]", "[src^='http://']", "[text*='hello']", "[class~='aa']"
   * Class selectors. E.g. ".no_border"
   * ID selectors. E.g. "#input_box"
-  * Pseudo-classes. E.g. "ul li:even", "ol li:gt(3)"
+  * Pseudo-classes. E.g. "ul li:even", "ol li:gt(3)" see Supported pseudo-classes
 
 Supported pseudo-classes:
 * :even, :odd
@@ -36,19 +36,25 @@ Supported pseudo-classes:
   
 Xml example:
 
-        var input: Xml = Xml.parse(ResKeeper.loadAssetText("res/a.xml"));
-        var v: TreeVisitor<Xml> = new XmlVisitor();
-        var query = new HxQuery(v);
-        query.print(input);
-        var found: Array<Xml> = query.find(input, "div#box1 > form input[type='text']");
+        var xhtml = Xml.parse(Assets.getText("res/sample.xhtml"));
+        var input = [ xhtml ];
+        v = new XmlVisitor();
+        v.createQuery(input).select("pcdata").filter(function(idx: Int, n: Xml) : Bool {
+            return n.nodeValue.trim().length == 0;
+        }).remove();
+        trace(v.createQuery(input).dump());
+        var found: HxQuery<Xml> = v.createQuery(input).select("body > ul > li");
 
 Flash/NME display list example:
 
-        var input = nme.Lib.current.stage;
+        var input = [ cast (stage, DisplayObject) ];
         var v: TreeVisitor<DisplayObject> = new DisplayListVisitor();
-        var query = new HxQuery(v);
-        query.print(input);
-        var found: Array<DisplayObject> = query.find(input, "MySprite > TextField:nth-child(2)");
+        trace(v.createQuery(input).dump());
+        var found: HxQuery<DisplayObject> = v.createQuery(input).select("Stage Circle").filter(function(_, n: DisplayObject) {
+            return Std.is(n, Base);
+        }).each(function(n: DisplayObject) {
+            cast(n, Base).update(true);
+        });
         
 Notes for display list visitor:
 * DisplayObject.name is treated as the ID of the node
@@ -61,7 +67,6 @@ Haxe object example:
         var obj = { name: [ "rocks", "wang" ], age: 35, mobiles: [{ type: "xiaomi", no: "1111" }, { type: "c8500" }] };
         var input: Wrapper = DynamicVisitor.wrapper(obj);
         var v: TreeVisitor<Wrapper> = new DynamicVisitor();
-        var query = new HxQuery(v);
-        query.print(input);
-        var found: Array<Wrapper> = query.find(input, "Array#mobiles > :not([no])");
+        trace(v.createQuery(input).dump());
+        var found: HxQuery<Wrapper> = v.createQuery(input).select("mobiles > :not([no])");
 
