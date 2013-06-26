@@ -50,7 +50,8 @@ CSS Selectors implemention based on http://www.w3.org/TR/selectors/
     var found: HxQuery<Xml> = v.createQuery(input).select("body > ul > li");
 ```
 
-Flash/NME display list example:
+#### Flash/NME display list example:
+
 ```haxe
     var input = [ cast (stage, DisplayObject) ];
     var v: TreeVisitor<DisplayObject> = new DisplayListVisitor();
@@ -68,7 +69,8 @@ Notes for display list visitor:
 * The super classes & implemented interfaces are treated as the Class of the node, can use the full-qualified name with "." replaced by "_", or registered short name
 * All fields & properties are treated as Attribute of the node
 
-Haxe object example:
+#### Haxe object example:
+
 ```haxe
     var obj = { name: [ "rocks", "wang" ], age: 35, mobiles: [{ type: "xiaomi", no: "1111" }, { type: "c8500" }] };
     var input: Wrapper = DynamicVisitor.wrapper(obj);
