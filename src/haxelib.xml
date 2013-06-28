@@ -1,4 +1,4 @@
-<project name="rox-hxquery" url="https://github.com/rockswang/hxquery" license="BSD">
+<project name="rox-hxquery" url="https://github.com/rockswang/hxquery" license="MIT">
     <user name="rockswang"/>
     <tag v="cross"/>
     <tag v="dom"/>

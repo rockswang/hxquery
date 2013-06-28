@@ -31,6 +31,7 @@ class Main extends Sprite {
 
         var tf = text(0, 12, false, true, width, height - 30);
         tf.text = v.createQuery(input).dump(); //xmlToString);
+        trace(tf.text);
         stage.addChild(tf);
 
         var inp = text(0, 16, true, false, width - 100, 20);
