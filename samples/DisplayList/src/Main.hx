@@ -1,19 +1,21 @@
 import com.roxstudio.haxe.hxquery.DisplayListQuery;
-import nme.events.MouseEvent;
+import #if openfl flash #else nme #end.events.MouseEvent;
 import com.roxstudio.haxe.hxquery.DisplayListVisitor;
 import com.roxstudio.haxe.hxquery.HxQuery;
 import com.roxstudio.haxe.hxquery.TreeVisitor;
 
-import nme.display.DisplayObject;
-import nme.text.TextFormat;
-import nme.text.TextField;
-import nme.display.Sprite;
+import #if openfl flash #else nme #end.display.DisplayObject;
+import #if openfl flash #else nme #end.text.TextFormat;
+import #if openfl flash #else nme #end.text.TextField;
+import #if openfl flash #else nme #end.text.TextFieldType;
+import #if openfl flash #else nme #end.display.Sprite;
+import #if openfl flash #else nme #end.Lib;
 
 class Main extends Sprite {
 
     public function new() {
         super();
-        var stage = nme.Lib.current.stage;
+        var stage = Lib.current.stage;
         var width = stage.stageWidth;
         var height = stage.stageHeight;
         var root = new Circle(150, 0xFF0000);
@@ -75,7 +77,7 @@ class Main extends Sprite {
     private static function text(color: Int, size: Float, input: Bool, multiline: Bool, width: Float, height: Float) : TextField {
         var tf = new TextField();
         tf.selectable = tf.mouseEnabled = input;
-        if (input) tf.type = nme.text.TextFieldType.INPUT;
+        if (input) tf.type = TextFieldType.INPUT;
         tf.defaultTextFormat = textFormat(color, size);
         tf.multiline = tf.wordWrap = multiline;
         tf.width = width;
@@ -103,6 +105,7 @@ class Main extends Sprite {
                 case 1: new Square(r, Std.random(0xFFFFFF));
                 case 2: new Round(r, Std.random(0xFFFFFF));
                 case 3: new Triangle(r, Std.random(0xFFFFFF));
+                case _: null;
             }
             n.addChild(shape);
             shape.move();
@@ -167,7 +170,11 @@ class Square extends Base {
     }
 }
 
+#if haxe3
+class Circle extends Base implements ISmooth {
+#else
 class Circle extends Base, implements ISmooth {
+#end
     public function new(r: Float, color: Int) {
         super(r, color);
         this.name = "circle" + Base.globalCnt++;
@@ -178,8 +185,8 @@ class Circle extends Base, implements ISmooth {
 }
 
 class Triangle extends Base {
-    private static inline var rx = Math.cos(Math.PI / 6);
-    private static inline var ry = Math.sin(Math.PI / 6);
+    private static var rx = Math.cos(Math.PI / 6);
+    private static var ry = Math.sin(Math.PI / 6);
     public function new(r: Float, color: Int) {
         super(r, color);
         this.name = "triangle" + Base.globalCnt++;
@@ -192,7 +199,11 @@ class Triangle extends Base {
     }
 }
 
+#if haxe3
+class Round extends Square implements ISmooth {
+#else
 class Round extends Square, implements ISmooth {
+#end
     public function new(r: Float, color: Int) {
         super(r, color);
         this.name = "round" + Base.globalCnt++;

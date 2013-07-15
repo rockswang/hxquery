@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-    <app title="HxQuery Sample 02" file="hxquery-sample02"
+    <app title="HxQuery Sample 01" file="hxquery-sample01"
          main="Main"
          package="com.roxstudio.haxe" version="1.0.0"
          company="roxstudio" />
@@ -14,12 +14,7 @@
 
     <haxedef name="fdb" if="target_flash" />
 
-    <haxelib name="nme" />
+    <haxelib name="openfl" />
     <haxelib name="rox-hxquery" />
-
-    <assets path="res" include="*" />
-     
-    <ndll name="std" />
-    <ndll name="nme" haxelib="nme" />
 
 </project>

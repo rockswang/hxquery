@@ -18,6 +18,8 @@ class XmlVisitor extends AbstractVisitor<Xml> {
 #if flash
         compare = Reflect.field(Xml, "compare");
 #end
+        var dummy = Xml.createElement("dummy");
+        for (x in dummy) {} // prevent "iterator()" from being eliminated by DCE
     }
 
     public function new() {

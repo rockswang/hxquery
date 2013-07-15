@@ -1,14 +1,20 @@
 import StringTools;
-import nme.events.MouseEvent;
 import com.roxstudio.haxe.hxquery.TreeVisitor;
-import nme.Assets;
-import nme.text.TextFormat;
-import nme.text.TextField;
 import com.roxstudio.haxe.hxquery.XmlVisitor;
 import com.roxstudio.haxe.hxquery.HxQuery;
-import nme.display.Sprite;
+import #if openfl flash #else nme #end.events.MouseEvent;
+import #if openfl openfl #else nme #end.Assets;
+import #if openfl flash #else nme #end.text.TextFormat;
+import #if openfl flash #else nme #end.text.TextField;
+import #if openfl flash #else nme #end.text.TextFieldType;
+import #if openfl flash #else nme #end.display.Sprite;
+import #if openfl flash #else nme #end.Lib;
 
 using StringTools;
+
+#if haxe3
+private typedef Hash<T> = Map<String, T>;
+#end
 
 class Main extends Sprite {
 
@@ -17,7 +23,7 @@ class Main extends Sprite {
 
     public function new() {
         super();
-        var stage = nme.Lib.current.stage;
+        var stage = Lib.current.stage;
         var width = stage.stageWidth;
         var height = stage.stageHeight;
         selected = [];
@@ -31,7 +37,7 @@ class Main extends Sprite {
 
         var tf = text(0, 12, false, true, width, height - 30);
         tf.text = v.createQuery(input).dump(); //xmlToString);
-        trace(tf.text);
+//        trace(tf.text);
         stage.addChild(tf);
 
         var inp = text(0, 16, true, false, width - 100, 20);
@@ -73,16 +79,21 @@ class Main extends Sprite {
     }
 
     private function xmlToString(xml: Xml) : String {
-        var sel = Lambda.has(selected, xml, function(n1: Xml, n2: Xml) : Bool {
-            return v.equals(n1, n2);
+        var list = Lambda.filter(selected, function(n1) {
+            return v.equals(xml, n1);
         });
+        var sel = list.length > 0;
+
+//        var sel = Lambda.has(selected, xml, function(n1: Xml, n2: Xml) : Bool {
+//            return v.equals(n1, n2);
+//        });
         return sel ? "[ " + v.toString(xml) + " ]" : v.toString(xml);
     }
 
     private static function text(color: Int, size: Float, input: Bool, multiline: Bool, width: Float, height: Float) : TextField {
         var tf = new TextField();
         tf.selectable = tf.mouseEnabled = input;
-        if (input) tf.type = nme.text.TextFieldType.INPUT;
+        if (input) tf.type = TextFieldType.INPUT;
         tf.defaultTextFormat = textFormat(color, size);
         tf.multiline = tf.wordWrap = multiline;
         tf.width = width;

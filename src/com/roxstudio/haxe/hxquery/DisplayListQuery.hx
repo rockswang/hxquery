@@ -1,11 +1,12 @@
 package com.roxstudio.haxe.hxquery;
 
-import nme.display.DisplayObject;
+import #if openfl flash #else nme #end.display.DisplayObject;
+import #if openfl flash #else nme #end.Lib;
 
 class DisplayListQuery extends HxQuery<DisplayObject> {
 
     public function new(?elements: Array<DisplayObject>, visitor: TreeVisitor<DisplayObject>) {
-        super(elements != null ? elements : [ cast nme.Lib.current.stage ], visitor);
+        super(elements != null ? elements : [ cast Lib.current.stage ], visitor);
     }
 
     public function move(x: Float, y: Float) : DisplayListQuery {

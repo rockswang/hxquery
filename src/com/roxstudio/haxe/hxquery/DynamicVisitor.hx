@@ -2,6 +2,11 @@ package com.roxstudio.haxe.hxquery;
 
 using StringTools;
 
+#if haxe3
+private typedef Hash<T> = Map<String, T>;
+private typedef IntHash<T> = Map<Int, T>;
+#end
+
 class DynamicVisitor extends AbstractVisitor<Wrapper> {
 
     private static inline var TYPE = "__type__";
@@ -44,7 +49,7 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
                         }
                     }
                 }
-            case "Hash":
+            case "Hash", "haxe_ds_StringMap":
                 var hash: Hash<Dynamic> = cast n.value;
                 var keys = hash.keys();
                 cast {
@@ -55,7 +60,7 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
                         }
                     }
                 }
-            case "IntHash":
+            case "IntHash", "haxe_ds_IntMap":
                 var hash: IntHash<Dynamic> = cast n.value;
                 var keys = hash.keys();
                 cast {
@@ -88,10 +93,10 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
                 var arr: Array<Dynamic> = cast n.value;
                 var idx = int(id);
                 idx != null ? wrapper(arr[idx], n, id) : null;
-            case "Hash":
+            case "Hash", "haxe_ds_StringMap":
                 var hash: Hash<Dynamic> = cast n.value;
                 wrapper(hash.get(id), n, id);
-            case "IntHash":
+            case "IntHash", "haxe_ds_IntMap":
                 var hash: IntHash<Dynamic> = cast n.value;
                 var idx = int(id);
                 idx != null ? wrapper(hash.get(idx), n, id) : null;
@@ -113,11 +118,11 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
                     arr.insert(idx, child.value);
                 }
                 true;
-            case "Hash":
+            case "Hash", "haxe_ds_StringMap":
                 var hash: Hash<Dynamic> = cast n.value;
                 hash.set(child.name, child.value);
                 true;
-            case "IntHash":
+            case "IntHash", "haxe_ds_IntMap":
                 var hash: IntHash<Dynamic> = cast n.value;
                 var idx = int(child.name);
                 if (idx != null) { hash.set(idx, child.value); true; } else false;
@@ -133,10 +138,10 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
             case "Array":
                 var arr: Array<Dynamic> = cast n.value;
                 arr.remove(child.value) ? child : null;
-            case "Hash":
+            case "Hash", "haxe_ds_StringMap":
                 var hash: Hash<Dynamic> = cast n.value;
                 hash.remove(child.name) ? child : null;
-            case "IntHash":
+            case "IntHash", "haxe_ds_IntMap":
                 var hash: IntHash<Dynamic> = cast n.value;
                 var idx = int(child.name);
                 idx != null && hash.remove(idx) ? child : null;
@@ -156,11 +161,11 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
                     arr.insert(idx, newc.value);
                     true;
                 } else false;
-            case "Hash":
+            case "Hash", "haxe_ds_StringMap":
                 var hash: Hash<Dynamic> = cast n.value;
                 hash.set(old.name, newc.value);
                 true;
-            case "IntHash":
+            case "IntHash", "haxe_ds_IntMap":
                 var hash: IntHash<Dynamic> = cast n.value;
                 var idx = int(old.name);
                 if (idx != null) {
@@ -176,8 +181,8 @@ class DynamicVisitor extends AbstractVisitor<Wrapper> {
         if (n.isLeaf || n.parent == null) return false;
         var val: Dynamic = switch (n.type) {
             case "Array": cast [];
-            case "Hash": cast new Hash<Dynamic>();
-            case "IntHash": cast new IntHash<Dynamic>();
+            case "Hash", "haxe_ds_StringMap": cast new Hash<Dynamic>();
+            case "IntHash", "haxe_ds_IntMap": cast new IntHash<Dynamic>();
             default: cast {};
         }
         Reflect.setField(n.parent.value, n.name, val);

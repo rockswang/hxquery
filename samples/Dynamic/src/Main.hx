@@ -1,14 +1,21 @@
 import haxe.Json;
-import nme.events.MouseEvent;
-import nme.Assets;
-import nme.text.TextFormat;
-import nme.text.TextField;
+import #if openfl openfl #else nme #end.Assets;
+import #if openfl flash #else nme #end.events.MouseEvent;
+import #if openfl flash #else nme #end.text.TextFormat;
+import #if openfl flash #else nme #end.text.TextField;
+import #if openfl flash #else nme #end.text.TextFieldType;
+import #if openfl flash #else nme #end.display.Sprite;
+import #if openfl flash #else nme #end.Lib;
 import com.roxstudio.haxe.hxquery.DynamicVisitor;
 import com.roxstudio.haxe.hxquery.HxQuery;
 import com.roxstudio.haxe.hxquery.TreeVisitor;
-import nme.display.Sprite;
 
 using StringTools;
+
+#if haxe3
+private typedef Hash<T> = Map<String, T>;
+private typedef IntHash<T> = Map<Int, T>;
+#end
 
 class Main extends Sprite {
 
@@ -17,7 +24,7 @@ class Main extends Sprite {
 
     public function new() {
         super();
-        var stage = nme.Lib.current.stage;
+        var stage = Lib.current.stage;
         var width = stage.stageWidth;
         var height = stage.stageHeight;
         selected = [];
@@ -82,16 +89,21 @@ class Main extends Sprite {
     }
 
     private function jsonToString(n: Wrapper) : String {
-        var sel = Lambda.has(selected, n, function(n1: Wrapper, n2: Wrapper) : Bool {
-            return v.equals(n1, n2);
+        var list = Lambda.filter(selected, function(n1) {
+            return v.equals(n, n1);
         });
+        var sel = list.length > 0;
+
+//        var sel = Lambda.has(selected, n, function(n1: Wrapper, n2: Wrapper) : Bool {
+//            return v.equals(n1, n2);
+//        });
         return sel ? "[ " + v.toString(n) + " ]" : v.toString(n);
     }
 
     private static function text(color: Int, size: Float, input: Bool, multiline: Bool, width: Float, height: Float) : TextField {
         var tf = new TextField();
         tf.selectable = tf.mouseEnabled = input;
-        if (input) tf.type = nme.text.TextFieldType.INPUT;
+        if (input) tf.type = TextFieldType.INPUT;
         tf.defaultTextFormat = textFormat(color, size);
         tf.multiline = tf.wordWrap = multiline;
         tf.width = width;

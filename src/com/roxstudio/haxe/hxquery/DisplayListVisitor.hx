@@ -1,11 +1,15 @@
 package com.roxstudio.haxe.hxquery;
 
 import com.roxstudio.haxe.hxquery.AbstractVisitor;
-import nme.display.Shape;
-import nme.display.DisplayObjectContainer;
-import nme.display.DisplayObject;
+import #if openfl flash #else nme #end.display.Shape;
+import #if openfl flash #else nme #end.display.DisplayObjectContainer;
+import #if openfl flash #else nme #end.display.DisplayObject;
 
 using StringTools;
+
+#if haxe3
+private typedef Hash<T> = Map<String, T>;
+#end
 
 class DisplayListVisitor extends AbstractVisitor<DisplayObject> {
 
